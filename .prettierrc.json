@@ -1,0 +1,17 @@
+{
+    "overrides": [
+        {
+            "files": [
+                "*"
+            ],
+            "options": {
+                "tabWidth": 4,
+                "useTabs": true,
+                "bracketSameLine": false,
+                "printWidth": 150,
+                "semi": false
+            }
+        }
+    ],
+    "plugins": []
+}

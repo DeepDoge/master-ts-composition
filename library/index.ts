@@ -13,7 +13,7 @@ class Instr<T extends Obj> {
 		bindMethods(this)
 	}
 }
-export type Instancer<T extends Obj> = { new (obj: T): T } & { ___instancer: never }
+export type Instancer<T extends Obj> = { new (obj: T): T }
 
 export function instancer<This extends Obj>() {
 	return <Base extends Obj = Obj>(base: Instancer<Base> | Instancer<This> = Instr<This> as Instancer<This>) =>

@@ -25,12 +25,14 @@ interface Baz {
    baz: string
 }
 const Baz = instancer<Baz>()(Foo) // Instancer<Baz & Foo & Bar>
-const baz: Bar = new Baz({ baz: "baz", foo: "bar", bar: "foo" }) // Baz & Foo & Bar
+const baz = new Baz({ baz: "baz", foo: "bar", bar: "foo" }) // Baz & Foo & Bar
 
-baz.baz // error
-if (baz instanceof Baz)
+const bazAsBar: Bar = baz
+
+bazAsBar.baz // error
+if (bazAsBar instanceof Baz)
 {
-   baz.baz // ok
+   bazAsBar.baz // ok
 }
 ```
 

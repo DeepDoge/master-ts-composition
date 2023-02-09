@@ -10,24 +10,28 @@ npm install https://github.com/DeepDoge/master-instancer.git
 # Usage
 ```ts
 interface Bar {
-	bar: string
+   bar: string
 }
 const Bar = instancer<Bar>()() // Instancer<Bar>
 const bar = new Bar({ bar: "foo" }) // Bar
 
 interface Foo {
-	foo: string
+   foo: string
 }
 const Foo = instancer<Foo>()(Bar) // Instancer<Foo & Bar>
 const foo = new Foo({ foo: "bar", bar: "foo" }) // Foo & Bar
 
 interface Baz {
-	baz: string
+   baz: string
 }
 const Baz = instancer<Baz>()(Foo) // Instancer<Baz & Foo & Bar>
-const baz = new Baz({ baz: "baz", foo: "bar", bar: "foo" }) // Baz & Foo & Bar
+const baz: Bar = new Baz({ baz: "baz", foo: "bar", bar: "foo" }) // Baz & Foo & Bar
 
-if (baz instanceof Foo) console.log(baz.foo) // bar
+baz.baz // error
+if (baz instanceof Baz)
+{
+   baz.baz // ok
+}
 ```
 
 # Why would I use this?

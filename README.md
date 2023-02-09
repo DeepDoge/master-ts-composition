@@ -31,6 +31,7 @@ if (baz instanceof Foo) console.log(baz.foo) // bar
 ```
 
 # Why would I use this?
-You can use this to create a class hierarchy from your TS types. This is useful if you want to use the `instanceof` operator to check if an object is of a certain type.<br/>
-You can normally do this by creating classes by hand, but this is tedious and error-prone. This library allows you to create classes just like you would create interfaces and types.<br/>
-You don't need to define `type` in your interfaces, and do string comparisons to check if an object is of a certain type. You can just use the `instanceof` operator naturally.
+- You can use this to create a class hierarchy from your TS types. 
+- - This is useful if you want to use the `instanceof` operator to check if an object is of a certain type.
+- You can normally do this by creating classes by hand, but this is tedious and error-prone. This library allows you to create classes just like you would create interfaces and types.
+- You don't need to define `type` in your interfaces, and do string comparisons to check if an object is of a certain type. You can just use the `instanceof` operator naturally.

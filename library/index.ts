@@ -16,6 +16,6 @@ class Instr<T extends Obj> {
 export type Instancer<T extends Obj> = { new (obj: T): T }
 
 export function instancer<This extends Obj>() {
-	return <Base extends Obj = Obj>(base: Instancer<Base> | Instancer<This> = (Instr as Instancer<This>)) =>
+	return <Base extends Obj = Obj>(base: Instancer<Base> | Instancer<This> = Instr as Instancer<This>) =>
 		class extends base {} as Instancer<This & (Obj extends Base ? {} : Base)>
 }

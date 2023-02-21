@@ -1,19 +1,19 @@
 type Obj = Record<string, any>
 
-export type Intersector<T extends Obj> = {
-	intersect<U extends Obj>(other: InstanceableType<U>): Intersector<T & U>
-	$(): InstanceableType<T>
+export type Intersector<This extends Obj> = {
+	intersect<Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other>
+	$(): InstanceableType<This>
 }
 
-export type InstanceableType<T extends Obj> = {
+export type InstanceableType<This extends Obj> = {
 	" __is_intersection__ ": boolean
 	" __intersections__ ": Set<InstanceableType<any>>
-	intersect<U extends Obj>(other: InstanceableType<U>): Intersector<T & U>
-	new (init: T): T
+	intersect<Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other>
+	new <Init extends Obj>(init: This extends Init ? Init : never): This
 }
 
 export function instanceableType<This extends Obj = {}>() {
-	return class {
+	return class<Init extends Obj> {
 		static [" __is_intersection__ "] = false
 		static [" __intersections__ "] = new Set<InstanceableType<any>>()
 		static [Symbol.hasInstance]<T extends InstanceType<typeof this>>(value: T): boolean {
@@ -33,7 +33,7 @@ export function instanceableType<This extends Obj = {}>() {
 			other[" __intersections__ "].forEach((intersection) => intersectionsOfNEW.add(intersection))
 
 			const intersector = {
-				intersect<U extends Obj>(other: InstanceableType<U>) {
+				intersect<Other extends Obj>(other: InstanceableType<Other>) {
 					intersectionsOfNEW.add(other)
 					other[" __intersections__ "].forEach((intersection) => intersectionsOfNEW.add(intersection))
 					return intersector
@@ -46,7 +46,7 @@ export function instanceableType<This extends Obj = {}>() {
 			return intersector as Intersector<This & Other>
 		}
 
-		constructor(init: This) {
+		constructor(init: This extends Init ? Init : never) {
 			Object.assign(this, init)
 		}
 	} as any as InstanceableType<This>

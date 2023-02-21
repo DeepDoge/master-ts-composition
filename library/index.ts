@@ -8,7 +8,7 @@ export type InstanceableType<T extends Obj> = {
 }
 
 export function instanceableType<This extends Obj = {}>() {
-	const THIS = class {
+	const THIS: InstanceableType<This> = class {
 		static [" __is_intersection__ "] = false
 		static [" __intersections__ "] = new Set<InstanceableType<any>>()
 		static [Symbol.hasInstance]<T extends InstanceType<typeof this>>(value: T): boolean {
@@ -31,7 +31,7 @@ export function instanceableType<This extends Obj = {}>() {
 		constructor(init: This) {
 			Object.assign(this, init)
 		}
-	}
+	} as any
 
-	return THIS as any as InstanceableType<This>
+	return THIS
 }

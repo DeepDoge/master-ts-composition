@@ -5,7 +5,7 @@ MasterInstance let's you convert your TS types into JS classes, and let's you ex
 
 # Installation
 
-```
+```bash
 npm install https://github.com/DeepDoge/master-instanceable-types.git
 ```
 
@@ -13,11 +13,11 @@ npm install https://github.com/DeepDoge/master-instanceable-types.git
 
 ```ts
 type Monster = {
-	name: string
+  name: string
 }
 const Monster = instanceableType<Monster>() // InstaceableType<Monster>
 function createMonster(name: string) {
-	return new Monster({ name })
+  return new Monster({ name })
 }
 
 const monster1 = createMonster("monster 1") // Monster
@@ -25,38 +25,38 @@ const monster1 = createMonster("monster 1") // Monster
 console.log(monster1 instanceof Monster) // true
 
 type Walker = {
-	walk(): void
+  walk(): void
 }
 const Walker = instanceableType<Walker>() // InstanceableType<Walker>
 function createWalker() {
-	return new Walker({
-		walk() {
-			console.log("walk")
-		},
-	})
+  return new Walker({
+    walk() {
+      console.log("walk")
+    },
+  })
 }
 
 type Attacker = {
-	attack(): void
+  attack(): void
 }
 const Attacker = instanceableType<Attacker>() // InstanceableType<Attacker>
 function createAttacker() {
-	return new Attacker({
-		attack() {
-			console.log("attack")
-		},
-	})
+  return new Attacker({
+    attack() {
+      console.log("attack")
+    },
+  })
 }
 
 const AttackerWalkerMonster = Monster.intersect(Attacker).intersect(Walker) // InstanceableType<Monster & Attacker & Walker>
 function createAttackerWalkerMonster(name: string) {
-	return new AttackerWalkerMonster({
-		...createMonster(name),
-		...createWalker(),
-		attack() {
-			console.log(`${name} attacks`)
-		},
-	})
+  return new AttackerWalkerMonster({
+    ...createMonster(name),
+    ...createWalker(),
+    attack() {
+      console.log(`${name} attacks`)
+    },
+  })
 }
 
 const monster2 = createAttackerWalkerMonster("Monster 2") // Monster & Attacker & Walker

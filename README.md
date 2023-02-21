@@ -5,7 +5,7 @@ MasterInstance let's you convert your TS types into JS classes, and let's you ex
 
 # Installation
 
-```bash
+```
 npm install https://github.com/DeepDoge/master-instanceable-types.git
 ```
 

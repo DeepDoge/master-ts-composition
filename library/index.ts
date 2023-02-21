@@ -1,11 +1,3 @@
-function bindMethods<T extends object>(obj: T): T {
-	for (const key of Object.getOwnPropertyNames(obj.constructor.prototype)) {
-		const descriptor = Object.getOwnPropertyDescriptor(obj, key)
-		if (descriptor?.value instanceof Function) Object.defineProperty(obj, key, { ...descriptor, value: descriptor.value.bind(obj) })
-	}
-	return obj
-}
-
 type Obj = Record<string, any>
 
 export type InstanceableType<T extends Obj> = {
@@ -19,7 +11,7 @@ export function instanceableType<This extends Obj = {}>() {
 	const THIS = class {
 		static [" __is_intersection__ "] = false
 		static [" __intersections__ "] = new Set<InstanceableType<any>>()
-		static [Symbol.hasInstance]<T extends typeof this["prototype"]>(value: T): boolean {
+		static [Symbol.hasInstance]<T extends InstanceType<typeof this>>(value: T): boolean {
 			if (this[" __is_intersection__ "]) {
 				for (const intersection of this[" __intersections__ "]) if (!(value instanceof intersection)) return false
 				return true
@@ -38,7 +30,6 @@ export function instanceableType<This extends Obj = {}>() {
 
 		constructor(init: This) {
 			Object.assign(this, init)
-			bindMethods(this)
 		}
 	}
 

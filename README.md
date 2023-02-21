@@ -67,6 +67,6 @@ console.log(monster2 instanceof Walker) // true
 monster2.attack() // "Monster 2 attacks"
 
 // Event better, you can even do this!
-const AttackerWalker = Attacker.intersect(Walker)
+const AttackerWalker = Attacker.intersect(Walker) InstaceableType<Attacker & Walker>
 console.log(monster2 instanceof AttackerWalker) // true
 ```

@@ -1,6 +1,6 @@
 type Obj = Record<string, any>
 
-type Intersector<T extends Obj> = {
+export type Intersector<T extends Obj> = {
 	intersect<U extends Obj>(other: InstanceableType<U>): Intersector<T & U>
 	$(): InstanceableType<T>
 }

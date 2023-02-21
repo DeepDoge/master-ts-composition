@@ -1,6 +1,6 @@
 # InstanceableTypes
 
-InstanceableTypes let's you convert your TS types into JS classes, and let's you extend them with unlimited number of other IntanceableType(s).<br />
+InstanceableTypes let's you convert your TS types into JS classes, and let's you extend them with unlimited number of other InstanceableType(s).<br />
 This allows you to create compositions with factory functions that has natural runtime typechecking with the keyword `instanceof`.
 
 # Installation

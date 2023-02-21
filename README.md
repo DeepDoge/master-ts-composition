@@ -1,7 +1,7 @@
-# MasterInstancer
+# InstanceableTypes
 
-MasterInstance let's you convert your TS types into JS classes, and let's you extend with unlimited number of extends.<br />
-[# Why would I use this?](#why-would-i-use-this)
+InstanceableTypes let's you convert your TS types into JS classes, and let's you extend them with unlimited number of other IntanceableType(s).<br />
+This allows you to create compositions with factory functions that has natural runtime typechecking with the keyword `instanceof`.
 
 # Installation
 
@@ -63,15 +63,10 @@ const monster2 = createAttackerWalkerMonster("Monster 2") // Monster & Attacker 
 console.log(monster2 instanceof Monster) // true
 console.log(monster2 instanceof Attacker) // true
 console.log(monster2 instanceof Walker) // true
-const AttackerWalker = Attacker.intersect(Walker)
-console.log(monster2 instanceof AttackerWalker) // true
 
 monster2.attack() // "Monster 2 attacks"
+
+// Event better, you can even do this!
+const AttackerWalker = Attacker.intersect(Walker)
+console.log(monster2 instanceof AttackerWalker) // true
 ```
-
-# Why would I use this?
-
--   You can use this to create a class hierarchy from your TS types.
--   -   This is useful if you want to use the `instanceof` operator to check if an object is of a certain type.
--   You can normally do this by creating classes by hand, but this is tedious and error-prone. This library allows you to create classes just like you would create interfaces and types.
--   You don't need to define `type` in your interfaces, and do string comparisons to check if an object is of a certain type. You can just use the `instanceof` operator naturally.

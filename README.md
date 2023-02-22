@@ -1,6 +1,6 @@
 # InstanceableTypes
 
-InstanceableTypes let's you create compositions and add runtime typechecking to your TS types with `instanceof` keyword.<br />
+InstanceableTypes let's you create compositions with your TS types while adding runtime typechecking to them with `instanceof` keyword.<br />
 
 # Installation
 

@@ -9,7 +9,7 @@ export type InstanceableType<This extends Obj> = {
 	" __is_intersection__ ": boolean
 	" __intersections__ ": Set<InstanceableType<any>>
 	intersect<Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other>
-	new <Init extends Obj>(init: This extends Init ? Init : never): This
+	new <Init extends Obj>(init: This extends Init ? This : never): This
 }
 
 export function instanceableType<This extends Obj = {}>() {
@@ -46,7 +46,7 @@ export function instanceableType<This extends Obj = {}>() {
 			return intersector as Intersector<This & Other>
 		}
 
-		constructor(init: This extends Init ? Init : never) {
+		constructor(init: This extends Init ? This : never) {
 			Object.assign(this, init)
 		}
 	} as any as InstanceableType<This>

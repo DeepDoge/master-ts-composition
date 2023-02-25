@@ -36,7 +36,6 @@ export function instanceableType<This extends Obj = {}>() {
 
 	const type = constructor as InstanceableType<This>
 
-	type[InstanceableSymbols.isIntersection] = false
 	type[InstanceableSymbols.intersections] = new Set()
 	Object.defineProperty(type, Symbol.hasInstance, {
 		value: <T extends This>(value: T) => {

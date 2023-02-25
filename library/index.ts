@@ -1,53 +1,77 @@
-type Obj = Record<string, any>
+type Obj = Record<string | number | symbol, any>
+
+export namespace InstanceableSymbols {
+	export const isIntersection = Symbol()
+	export const intersections = Symbol()
+	export const type = Symbol()
+}
 
 export type Intersector<This extends Obj> = {
 	intersect<Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other>
 	$(): InstanceableType<This>
 }
 
-export type InstanceableType<This extends Obj> = {
-	" __is_intersection__ ": boolean
-	" __intersections__ ": Set<InstanceableType<any>>
+export type InstanceableTypeConstructor<This extends Obj> = {
+	<Init extends Obj>(init: This extends Init ? This : never): This
+}
+
+export type InstanceableTypeMethods<This extends Obj> = {
+	[InstanceableSymbols.isIntersection]: boolean
+	[InstanceableSymbols.intersections]: Set<InstanceableType<any>>
+	[Symbol.hasInstance]<T extends This>(value: T): boolean
 	intersect<Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other>
-	new <Init extends Obj>(init: This extends Init ? This : never): This
+}
+
+export type InstanceableType<This extends Obj> = InstanceableTypeMethods<This> & InstanceableTypeConstructor<This>
+
+type InternalThis<This extends Obj> = This & {
+	[InstanceableSymbols.type]: InstanceableType<This>
 }
 
 export function instanceableType<This extends Obj = {}>() {
-	return class<Init extends Obj> {
-		static [" __is_intersection__ "] = false
-		static [" __intersections__ "] = new Set<InstanceableType<any>>()
-		static [Symbol.hasInstance]<T extends InstanceType<typeof this>>(value: T): boolean {
-			if (this[" __is_intersection__ "]) {
-				for (const intersection of this[" __intersections__ "]) if (!(value instanceof intersection)) return false
+	const constructor: InstanceableTypeConstructor<This> = (init) => {
+		;(init as any as InternalThis<This>)[InstanceableSymbols.type] = type
+		return init
+	}
+
+	const type = constructor as InstanceableType<This>
+
+	type[InstanceableSymbols.isIntersection] = false
+	type[InstanceableSymbols.intersections] = new Set()
+	Object.defineProperty(type, Symbol.hasInstance, {
+		value: <T extends This>(value: T) => {
+			if (type[InstanceableSymbols.isIntersection]) {
+				for (const intersection of type[InstanceableSymbols.intersections]) if (!(value instanceof intersection)) return false
 				return true
 			}
-			return value?.constructor === this || (value?.constructor as InstanceableType<any>)[" __intersections__ "]?.has(this as any)
-		}
-		static intersect<Other extends Obj>(other: InstanceableType<Other>) {
-			const NEW = instanceableType<This & Other>()
-			NEW[" __is_intersection__ "] = true
-			const intersectionsOfNEW = NEW[" __intersections__ "]
-			intersectionsOfNEW.add(this)
-			this[" __intersections__ "].forEach((intersection) => intersectionsOfNEW.add(intersection))
-			intersectionsOfNEW.add(other)
-			other[" __intersections__ "].forEach((intersection) => intersectionsOfNEW.add(intersection))
+			return (
+				value?.[InstanceableSymbols.type] === type ||
+				(value?.[InstanceableSymbols.type] as InstanceableType<any>)?.[InstanceableSymbols.intersections]?.has(type)
+			)
+		},
+	})
+	type.intersect = <Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other> => {
+		const NEW = instanceableType<This & Other>()
+		NEW[InstanceableSymbols.isIntersection] = true
+		const intersectionsOfNEW = NEW[InstanceableSymbols.intersections]
+		intersectionsOfNEW.add(type)
+		type[InstanceableSymbols.intersections].forEach((intersection) => intersectionsOfNEW.add(intersection))
+		intersectionsOfNEW.add(other)
+		other[InstanceableSymbols.intersections].forEach((intersection) => intersectionsOfNEW.add(intersection))
 
-			const intersector = {
-				intersect<Other extends Obj>(other: InstanceableType<Other>) {
-					intersectionsOfNEW.add(other)
-					other[" __intersections__ "].forEach((intersection) => intersectionsOfNEW.add(intersection))
-					return intersector
-				},
-				$() {
-					return NEW
-				},
-			}
-
-			return intersector as Intersector<This & Other>
+		const intersector = {
+			intersect<Other extends Obj>(other: InstanceableType<Other>) {
+				intersectionsOfNEW.add(other)
+				other[InstanceableSymbols.intersections].forEach((intersection) => intersectionsOfNEW.add(intersection))
+				return intersector
+			},
+			$() {
+				return NEW
+			},
 		}
 
-		constructor(init: This extends Init ? This : never) {
-			Object.assign(this, init)
-		}
-	} as any as InstanceableType<This>
+		return intersector as Intersector<This & Other>
+	}
+
+	return type
 }

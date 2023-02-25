@@ -6,8 +6,8 @@ export namespace InstanceableSymbols {
 	export const type = Symbol()
 }
 
-export type Intersector<This extends Obj> = {
-	intersect<Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other>
+export type InstanceableTypeIntersector<This extends Obj> = {
+	intersect<Other extends Obj>(other: InstanceableType<Other>): InstanceableTypeIntersector<This & Other>
 	$(): InstanceableType<This>
 }
 
@@ -19,7 +19,7 @@ export type InstanceableTypeMethods<This extends Obj> = {
 	[InstanceableSymbols.isIntersection]: boolean
 	[InstanceableSymbols.intersections]: Set<InstanceableType<any>>
 	[Symbol.hasInstance]<T extends This>(value: T): boolean
-	intersect<Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other>
+	intersect<Other extends Obj>(other: InstanceableType<Other>): InstanceableTypeIntersector<This & Other>
 }
 
 export type InstanceableType<This extends Obj> = InstanceableTypeMethods<This> & InstanceableTypeConstructor<This>
@@ -45,12 +45,12 @@ export function instanceableType<This extends Obj = {}>() {
 				return true
 			}
 			return (
-				value?.[InstanceableSymbols.type] === type ||
-				(value?.[InstanceableSymbols.type] as InstanceableType<any>)?.[InstanceableSymbols.intersections]?.has(type)
+				(value as InternalThis<any>)?.[InstanceableSymbols.type] === type ||
+				(value as InternalThis<T>)?.[InstanceableSymbols.type]?.[InstanceableSymbols.intersections]?.has(type)
 			)
 		},
 	})
-	type.intersect = <Other extends Obj>(other: InstanceableType<Other>): Intersector<This & Other> => {
+	type.intersect = <Other extends Obj>(other: InstanceableType<Other>): InstanceableTypeIntersector<This & Other> => {
 		const NEW = instanceableType<This & Other>()
 		NEW[InstanceableSymbols.isIntersection] = true
 		const intersectionsOfNEW = NEW[InstanceableSymbols.intersections]
@@ -70,7 +70,7 @@ export function instanceableType<This extends Obj = {}>() {
 			},
 		}
 
-		return intersector as Intersector<This & Other>
+		return intersector as InstanceableTypeIntersector<This & Other>
 	}
 
 	return type

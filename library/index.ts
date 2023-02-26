@@ -29,6 +29,7 @@ export const instanceableType: {
 } = <This extends Obj>(from?: InstanceableType<This>) => {
 	const type = {
 		new(init) {
+			if (instanceTypeMap.has(init)) throw new Error("Object already has an instanceable type")
 			instanceTypeMap.set(init, type)
 			return init
 		},

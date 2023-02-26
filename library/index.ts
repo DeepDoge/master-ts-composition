@@ -18,6 +18,10 @@ export type InstanceableType<This extends Obj> = {
 	"new"<Init extends Obj>(init: This extends Init ? This : never): This
 }
 
+export function instanceableTypeOf(value: unknown): InstanceableType<Obj> | null {
+	return instanceTypeMap.get(value) ?? null
+}
+
 const instanceTypeMap = new WeakMap<any, InstanceableType<any>>()
 export const instanceableType: {
 	<This extends Obj>(): InstanceableType<This>

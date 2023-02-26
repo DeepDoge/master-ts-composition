@@ -9,16 +9,13 @@ export type InstanceableTypeIntersectionBuilder<This extends Obj> = {
 	$(): InstanceableType<This>
 }
 
-export type InstanceableTypeConstructor<This extends Obj> = {
-	<Init extends Obj>(init: This extends Init ? This : never): This
-}
-
-const InternalMethod = Symbol("internal")
-type DontUseNewKeyword = typeof InternalMethod
-export type InstanceableType<This extends Obj> = InstanceableTypeConstructor<This> & {
+/* const InternalMethod = Symbol("internal")
+type DontUseNewKeyword = typeof InternalMethod */
+export type InstanceableType<This extends Obj> = {
 	[InstanceableSymbols.intersections]: Set<InstanceableType<any>>
-	[Symbol.hasInstance]<T extends This>(value: T): boolean
-	new (_: DontUseNewKeyword): This
+	[Symbol.hasInstance]<T extends This>(value: T): value is This
+	new (): This
+	"new"<Init extends Obj>(init: This extends Init ? This : never): This
 }
 
 const instanceTypeMap = new WeakMap<any, InstanceableType<any>>()
@@ -26,19 +23,17 @@ export const instanceableType: {
 	<This extends Obj>(): InstanceableType<This>
 	<This extends Obj>(intersect: InstanceableType<This>): InstanceableTypeIntersectionBuilder<This>
 } = <This extends Obj>(intersect?: InstanceableType<This>) => {
-	const constructor: InstanceableTypeConstructor<This> = (init) => {
-		instanceTypeMap.set(init, type)
-		return init
-	}
-
-	const type = constructor as InstanceableType<This>
+	const type = {
+		new(init) {
+			instanceTypeMap.set(init, type)
+			return init
+		},
+	} as InstanceableType<This>
 
 	if (intersect) {
-		const intersections = new Set<InstanceableType<This>>(intersect[InstanceableSymbols.intersections])
-		intersections.add(intersect)
-		type[InstanceableSymbols.intersections] = intersections
+		type[InstanceableSymbols.intersections] = new Set<InstanceableType<This>>(intersect[InstanceableSymbols.intersections]).add(intersect)
 		Object.defineProperty(type, Symbol.hasInstance, {
-			value: <T extends This>(value: T) => {
+			value: <T extends This>(value: T): value is This => {
 				for (const intersection of type[InstanceableSymbols.intersections]) if (!(value instanceof intersection)) return false
 				return true
 			},
@@ -46,8 +41,8 @@ export const instanceableType: {
 
 		const intersectionBuilder: InstanceableTypeIntersectionBuilder<This> = {
 			intersect<Other extends Obj>(other: InstanceableType<Other>) {
-				intersections.add(other)
-				other[InstanceableSymbols.intersections].forEach((intersection) => intersections.add(intersection))
+				type[InstanceableSymbols.intersections].add(other)
+				other[InstanceableSymbols.intersections].forEach((intersection) => type[InstanceableSymbols.intersections].add(intersection))
 				return intersectionBuilder
 			},
 			$() {
@@ -60,9 +55,9 @@ export const instanceableType: {
 
 	type[InstanceableSymbols.intersections] = new Set()
 	Object.defineProperty(type, Symbol.hasInstance, {
-		value: <T extends This>(value: T) => {
+		value: <T extends This>(value: T): boolean => {
 			const valueType = instanceTypeMap.get(value)
-			return valueType === type || valueType?.[InstanceableSymbols.intersections]?.has(type)
+			return !!(valueType === type || valueType?.[InstanceableSymbols.intersections]?.has(type))
 		},
 	})
 

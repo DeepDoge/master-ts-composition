@@ -12,11 +12,11 @@ npm install https://github.com/DeepDoge/master-instanceable-types.git
 
 ```ts
 type Monster = {
-    name: string
+	name: string
 }
 const Monster = instanceableType<Monster>() // InstaceableType<Monster>
 function createMonster(name: string) {
-    return Monster({ name })
+	return Monster({ name })
 }
 
 const monster1 = createMonster("monster 1") // Monster
@@ -24,38 +24,38 @@ const monster1 = createMonster("monster 1") // Monster
 console.log(monster1 instanceof Monster) // true
 
 type Walker = {
-    walk(): void
+	walk(): void
 }
 const Walker = instanceableType<Walker>() // InstanceableType<Walker>
 function createWalker() {
-    return Walker({
-        walk() {
-            console.log("walk")
-        },
-    })
+	return Walker({
+		walk() {
+			console.log("walk")
+		},
+	})
 }
 
 type Attacker = {
-    attack(): void
+	attack(): void
 }
 const Attacker = instanceableType<Attacker>() // InstanceableType<Attacker>
 function createAttacker() {
-    return Attacker({
-        attack() {
-            console.log("attack")
-        },
-    })
+	return Attacker({
+		attack() {
+			console.log("attack")
+		},
+	})
 }
 
-const AttackerWalkerMonster = Monster.intersect(Attacker).intersect(Walker).$() // InstanceableType<Monster & Attacker & Walker>
+const AttackerWalkerMonster = instanceableType(Monster).intersect(Attacker).intersect(Walker).$() // InstanceableType<Monster & Attacker & Walker>
 function createAttackerWalkerMonster(name: string) {
-    return AttackerWalkerMonster({
-        ...createMonster(name),
-        ...createWalker(),
-        attack() {
-            console.log(`${name} attacks`)
-        },
-    })
+	return AttackerWalkerMonster({
+		...createMonster(name),
+		...createWalker(),
+		attack() {
+			console.log(`${name} attacks`)
+		},
+	})
 }
 
 const monster2 = createAttackerWalkerMonster("Monster 2") // Monster & Attacker & Walker
@@ -66,6 +66,6 @@ console.log(monster2 instanceof Walker) // true
 monster2.attack() // "Monster 2 attacks"
 
 // Event better, you can even do this!
-const AttackerWalker = Attacker.intersect(Walker).$() // InstaceableType<Attacker & Walker>
+const AttackerWalker = instanceableType(Attacker).intersect(Walker).$() // InstaceableType<Attacker & Walker>
 console.log(monster2 instanceof AttackerWalker) // true
 ```

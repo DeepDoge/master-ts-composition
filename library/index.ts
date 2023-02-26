@@ -15,7 +15,7 @@ export type InstanceableType<This extends Obj> = {
 	[InstanceableSymbols.intersections]: Set<InstanceableType<any>>
 	[Symbol.hasInstance]<T extends This>(value: T): value is This
 	new (): This
-	"new"<Init extends Obj>(init: This extends Init ? This : never): This
+	"new"<Init extends Obj>(init: This extends Init ? Init : never): This
 }
 
 export function instanceableTypeOf(value: unknown): InstanceableType<any> | null {

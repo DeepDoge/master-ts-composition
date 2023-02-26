@@ -9,12 +9,12 @@ export type InstanceableTypeIntersectionBuilder<This extends Obj> = {
 	$(): InstanceableType<This>
 }
 
-/* const InternalMethod = Symbol("internal")
-type DontUseNewKeyword = typeof InternalMethod */
+const _ = Symbol("internal")
+type _ = typeof _
 export type InstanceableType<This extends Obj> = {
 	[InstanceableSymbols.intersections]: Set<InstanceableType<any>>
 	[Symbol.hasInstance]<T extends This>(value: T): value is This
-	new (): This
+	new (_: _): This
 	"new"<Init extends Obj>(init: This extends Init ? Init : never): This
 }
 

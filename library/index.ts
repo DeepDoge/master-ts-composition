@@ -2,7 +2,6 @@ type Obj = Record<string | number | symbol, any>
 
 export namespace InstanceableSymbols {
 	export const intersections = Symbol()
-	export const type = Symbol()
 }
 
 export type InstanceableTypeIntersectionBuilder<This extends Obj> = {
@@ -21,16 +20,13 @@ export type InstanceableTypeMethods<This extends Obj> = {
 
 export type InstanceableType<This extends Obj> = InstanceableTypeMethods<This> & InstanceableTypeConstructor<This>
 
-type InternalThis<This extends Obj> = This & {
-	[InstanceableSymbols.type]: InstanceableType<This>
-}
-
+const instanceTypeMap = new WeakMap<any, InstanceableType<any>>()
 export const instanceableType: {
 	<This extends Obj>(): InstanceableType<This>
 	<This extends Obj>(intersect: InstanceableType<This>): InstanceableTypeIntersectionBuilder<This>
 } = <This extends Obj>(intersect?: InstanceableType<This>) => {
 	const constructor: InstanceableTypeConstructor<This> = (init) => {
-		;(init as any as InternalThis<This>)[InstanceableSymbols.type] = type
+		instanceTypeMap.set(init, type)
 		return init
 	}
 
@@ -64,10 +60,8 @@ export const instanceableType: {
 	type[InstanceableSymbols.intersections] = new Set()
 	Object.defineProperty(type, Symbol.hasInstance, {
 		value: <T extends This>(value: T) => {
-			return (
-				(value as InternalThis<any>)?.[InstanceableSymbols.type] === type ||
-				(value as InternalThis<T>)?.[InstanceableSymbols.type]?.[InstanceableSymbols.intersections]?.has(type)
-			)
+			const valueType = instanceTypeMap.get(value)
+			return valueType === type || valueType?.[InstanceableSymbols.intersections]?.has(type)
 		},
 	})
 

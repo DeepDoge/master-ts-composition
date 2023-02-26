@@ -24,7 +24,7 @@ export function instanceableTypeOf(value: unknown): InstanceableType<any> | null
 
 const instanceTypeMap = new WeakMap<any, InstanceableType<any>>()
 export const instanceableType: {
-	<This extends Obj>(): InstanceableType<This>
+	<This extends Obj = {}>(): InstanceableType<This>
 	<This extends Obj>(from: InstanceableType<This>): InstanceableTypeIntersectionBuilder<This>
 } = <This extends Obj>(from?: InstanceableType<This>) => {
 	const type = {

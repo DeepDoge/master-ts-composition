@@ -21,8 +21,8 @@ export type InstanceableType<This extends Obj> = {
 const instanceTypeMap = new WeakMap<any, InstanceableType<any>>()
 export const instanceableType: {
 	<This extends Obj>(): InstanceableType<This>
-	<This extends Obj>(intersect: InstanceableType<This>): InstanceableTypeIntersectionBuilder<This>
-} = <This extends Obj>(intersect?: InstanceableType<This>) => {
+	<This extends Obj>(from: InstanceableType<This>): InstanceableTypeIntersectionBuilder<This>
+} = <This extends Obj>(from?: InstanceableType<This>) => {
 	const type = {
 		new(init) {
 			instanceTypeMap.set(init, type)
@@ -30,8 +30,8 @@ export const instanceableType: {
 		},
 	} as InstanceableType<This>
 
-	if (intersect) {
-		type[InstanceableSymbols.intersections] = new Set<InstanceableType<This>>(intersect[InstanceableSymbols.intersections]).add(intersect)
+	if (from) {
+		type[InstanceableSymbols.intersections] = new Set<InstanceableType<This>>(from[InstanceableSymbols.intersections]).add(from)
 		Object.defineProperty(type, Symbol.hasInstance, {
 			value: <T extends This>(value: T): value is This => {
 				for (const intersection of type[InstanceableSymbols.intersections]) if (!(value instanceof intersection)) return false

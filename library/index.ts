@@ -20,6 +20,8 @@ export type InstanceableTypeMethods<This extends Obj> = {
 
 export type InstanceableType<This extends Obj> = InstanceableTypeMethods<This> & InstanceableTypeConstructor<This>
 
+export type InstanceableInstanceType<T extends InstanceableType<any>> = T extends InstanceableType<infer U> ? U : never
+
 const instanceTypeMap = new WeakMap<any, InstanceableType<any>>()
 export const instanceableType: {
 	<This extends Obj>(): InstanceableType<This>

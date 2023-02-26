@@ -1,15 +1,15 @@
 {
-    "type": "module",
-    "name": "master-instancer",
-    "version": "1.0.0",
-    "description": "Convert your TS types into JS classes.",
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/DeepDoge/master-instancer.git"
-    },
-    "bugs": {
-      "url": "https://github.com/DeepDoge/master-instancer/issues"
-    },
-    "homepage": "https://github.com/DeepDoge/master-instancer#readme",
-    "devDependencies": {}
-  }
+	"type": "module",
+	"name": "master-instanceable-types",
+	"version": "1.0.0",
+	"description": "Convert your TS types into JS classes.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/DeepDoge/master-instanceable-types.git"
+	},
+	"bugs": {
+		"url": "https://github.com/DeepDoge/master-instanceable-types/issues"
+	},
+	"homepage": "https://github.com/DeepDoge/master-instanceable-types#readme",
+	"devDependencies": {}
+}

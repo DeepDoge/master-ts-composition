@@ -15,13 +15,11 @@ export type InstanceableTypeConstructor<This extends Obj> = {
 
 const InternalMethod = Symbol("internal")
 type DontUseNewKeyword = typeof InternalMethod
-export type InstanceableTypeMethods<This extends Obj> = {
+export type InstanceableType<This extends Obj> = InstanceableTypeConstructor<This> & {
 	[InstanceableSymbols.intersections]: Set<InstanceableType<any>>
 	[Symbol.hasInstance]<T extends This>(value: T): boolean
 	new (_: DontUseNewKeyword): This
 }
-
-export type InstanceableType<This extends Obj> = InstanceableTypeMethods<This> & InstanceableTypeConstructor<This>
 
 const instanceTypeMap = new WeakMap<any, InstanceableType<any>>()
 export const instanceableType: {

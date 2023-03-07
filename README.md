@@ -1,6 +1,6 @@
-# InstanceableTypes
+# MASTER-TS Composition
 
-InstanceableTypes let's you create compositions with your TS types while adding runtime typechecking to them with `instanceof` keyword.<br />
+This let's you create compositions with your TS types while adding runtime typechecking to them with `instanceof` keyword.<br />
 
 # Installation
 

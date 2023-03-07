@@ -5,7 +5,7 @@ This let's you create compositions with your TS types while adding runtime typec
 # Installation
 
 ```bash
-npm install https://github.com/DeepDoge/master-instanceable-types.git
+npm install https://github.com/DeepDoge/master-ts-composition.git
 ```
 
 # Usage

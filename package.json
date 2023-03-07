@@ -1,15 +1,5 @@
 {
 	"type": "module",
-	"name": "master-instanceable-types",
-	"version": "1.0.0",
-	"description": "Convert your TS types into JS classes.",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/DeepDoge/master-instanceable-types.git"
-	},
-	"bugs": {
-		"url": "https://github.com/DeepDoge/master-instanceable-types/issues"
-	},
-	"homepage": "https://github.com/DeepDoge/master-instanceable-types#readme",
-	"devDependencies": {}
+	"name": "master-ts-composition",
+	"version": "1.0.0"
 }

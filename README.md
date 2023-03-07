@@ -1,4 +1,4 @@
-# MASTER-TS Composition
+# Master-TS Composition
 
 This let's you create compositions with your TS types while adding runtime typechecking to them with `instanceof` keyword.<br />
 

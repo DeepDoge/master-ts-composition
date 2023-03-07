@@ -12,11 +12,11 @@ npm install https://github.com/DeepDoge/master-ts-composition.git
 
 ```ts
 type Monster = {
-    name: string
+	name: string
 }
-const Monster = instanceableType<Monster>() // InstaceableType<Monster>
+const Monster = compositionType<Monster>() // InstaceableType<Monster>
 function createMonster(name: string) {
-    return Monster.new({ name })
+	return Monster.new({ name })
 }
 
 const monster1 = createMonster("monster 1") // Monster
@@ -24,38 +24,38 @@ const monster1 = createMonster("monster 1") // Monster
 console.log(monster1 instanceof Monster) // true
 
 type Walker = {
-    walk(): void
+	walk(): void
 }
-const Walker = instanceableType<Walker>() // InstanceableType<Walker>
+const Walker = compositionType<Walker>() // CompositionType<Walker>
 function createWalker() {
-    return Walker.new({
-        walk() {
-            console.log("walk")
-        },
-    })
+	return Walker.new({
+		walk() {
+			console.log("walk")
+		},
+	})
 }
 
 type Attacker = {
-    attack(): void
+	attack(): void
 }
-const Attacker = instanceableType<Attacker>() // InstanceableType<Attacker>
+const Attacker = compositionType<Attacker>() // CompositionType<Attacker>
 function createAttacker() {
-    return Attacker.new({
-        attack() {
-            console.log("attack")
-        },
-    })
+	return Attacker.new({
+		attack() {
+			console.log("attack")
+		},
+	})
 }
 
-const AttackerWalkerMonster = instanceableType(Monster).intersect(Attacker).intersect(Walker).$() // InstanceableType<Monster & Attacker & Walker>
+const AttackerWalkerMonster = compositionType(Monster).intersect(Attacker).intersect(Walker).$() // CompositionType<Monster & Attacker & Walker>
 function createAttackerWalkerMonster(name: string) {
-    return AttackerWalkerMonster.new({
-        ...createMonster(name),
-        ...createWalker(),
-        attack() {
-            console.log(`${name} attacks`)
-        },
-    })
+	return AttackerWalkerMonster.new({
+		...createMonster(name),
+		...createWalker(),
+		attack() {
+			console.log(`${name} attacks`)
+		},
+	})
 }
 
 const monster2 = createAttackerWalkerMonster("Monster 2") // Monster & Attacker & Walker
@@ -66,6 +66,6 @@ console.log(monster2 instanceof Walker) // true
 monster2.attack() // "Monster 2 attacks"
 
 // Event better, you can even do this!
-const AttackerWalker = instanceableType(Attacker).intersect(Walker).$() // InstaceableType<Attacker & Walker>
+const AttackerWalker = compositionType(Attacker).intersect(Walker).$() // InstaceableType<Attacker & Walker>
 console.log(monster2 instanceof AttackerWalker) // true
 ```
